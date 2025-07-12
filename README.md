@@ -1,1 +1,1 @@
-echo "# salate-daily-" >> README.md git init git add README.md git commit -m "first commit" git branch -M main git remote add origin https://benali171.github.io/EduManage-Pro-.git git push -u origin main
+echo "# EduManage-Pro-" >> README.md git init git add README.md git commit -m "first commit" git branch -M main git remote add origin https://benali171.github.io/EduManage-Pro-.git git push -u origin main
