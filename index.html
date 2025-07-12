@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS for enhancements */
+        .sidebar-link:hover .sidebar-icon {
+            transform: scale(1.1);
+        }
+        .sidebar-link.active {
+            border-left: 4px solid #3b82f6;
+        }
+        .data-table {
+            min-width: 100%;
+        }
+        .modal {
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .dropdown-content {
+            display: none;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-indigo-800 text-white">
+                <div class="flex items-center justify-center h-16 px-4 bg-indigo-900">
+                    <div class="flex items-center">
+                        <i class="fas fa-school text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">EduManage Pro</span>
+                    </div>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <div class="space-y-1">
+                        <a href="#" class="sidebar-link active flex items-center px-2 py-3 text-sm font-medium rounded-md bg-indigo-900 text-white">
+                            <i class="sidebar-icon fas fa-tachometer-alt mr-3 text-lg transition-transform"></i>
+                            Dashboard
+                        </a>
+                        
+                        <!-- People Management -->
+                        <div class="mt-6">
+                            <p class="px-2 text-xs font-semibold text-indigo-200 uppercase tracking-wider">People Management</p>
+                            <div class="mt-2 space-y-1">
+                                <a href="#" data-section="teachers" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-chalkboard-teacher mr-3 text-lg"></i>
+                                    Teachers
+                                </a>
+                                <a href="#" data-section="students" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-user-graduate mr-3 text-lg"></i>
+                                    Students
+                                </a>
+                                <a href="#" data-section="supervisors" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-user-shield mr-3 text-lg"></i>
+                                    Supervisors
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Resource Management -->
+                        <div class="mt-6">
+                            <p class="px-2 text-xs font-semibold text-indigo-200 uppercase tracking-wider">Resource Management</p>
+                            <div class="mt-2 space-y-1">
+                                <a href="#" data-section="library" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-book mr-3 text-lg"></i>
+                                    Library
+                                </a>
+                                <a href="#" data-section="restaurant" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-utensils mr-3 text-lg"></i>
+                                    Restaurant
+                                </a>
+                                <a href="#" data-section="inventory" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-boxes mr-3 text-lg"></i>
+                                    Inventory
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- System Management -->
+                        <div class="mt-6">
+                            <p class="px-2 text-xs font-semibold text-indigo-200 uppercase tracking-wider">System</p>
+                            <div class="mt-2 space-y-1">
+                                <a href="#" data-section="settings" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-cog mr-3 text-lg"></i>
+                                    Settings
+                                </a>
+                                <a href="#" data-section="reports" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-chart-bar mr-3 text-lg"></i>
+                                    Reports
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-indigo-700">
+                    <div class="flex items-center">
+                        <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/women/11.jpg" alt="Admin">
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">Admin User</p>
+                            <p class="text-xs font-medium text-indigo-200">admin@school.edu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile sidebar -->
+        <div class="md:hidden fixed inset-0 z-40">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" id="mobile-sidebar-backdrop"></div>
+            <div class="relative flex flex-col w-full max-w-xs bg-indigo-800" id="mobile-sidebar">
+                <div class="flex items-center justify-between h-16 px-4 bg-indigo-900">
+                    <div class="flex items-center">
+                        <i class="fas fa-school text-2xl mr-2 text-white"></i>
+                        <span class="text-xl font-bold text-white">EduManage</span>
+                    </div>
+                    <button class="text-white" id="close-mobile-sidebar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <!-- Same sidebar content as desktop -->
+                    <div class="space-y-1">
+                        <a href="#" class="sidebar-link active flex items-center px-2 py-3 text-sm font-medium rounded-md bg-indigo-900 text-white">
+                            <i class="sidebar-icon fas fa-tachometer-alt mr-3 text-lg"></i>
+                            Dashboard
+                        </a>
+                        
+                        <!-- People Management Mobile -->
+                        <div class="mt-6">
+                            <p class="px-2 text-xs font-semibold text-indigo-200 uppercase tracking-wider">People</p>
+                            <div class="mt-2 space-y-1">
+                                <a href="#" data-section="teachers" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-chalkboard-teacher mr-3 text-lg"></i>
+                                    Teachers
+                                </a>
+                                <a href="#" data-section="students" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-user-graduate mr-3 text-lg"></i>
+                                    Students
+                                </a>
+                                <a href="#" data-section="supervisors" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-user-shield mr-3 text-lg"></i>
+                                    Supervisors
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Resource Management Mobile -->
+                        <div class="mt-6">
+                            <p class="px-2 text-xs font-semibold text-indigo-200 uppercase tracking-wider">Resources</p>
+                            <div class="mt-2 space-y-1">
+                                <a href="#" data-section="library" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-book mr-3 text-lg"></i>
+                                    Library
+                                </a>
+                                <a href="#" data-section="restaurant" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-utensils mr-3 text-lg"></i>
+                                    Restaurant
+                                </a>
+                                <a href="#" data-section="inventory" class="sidebar-link flex items-center px-2 py-3 text-sm font-medium rounded-md hover:bg-indigo-700 text-white">
+                                    <i class="sidebar-icon fas fa-boxes mr-3 text-lg"></i>
+                                    Inventory
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top Navigation -->
+            <div class="flex items-center justify-between h-16 px-4 bg-white border-b border-gray-200">
+                <div class="flex items-center">
+                    <button class="md:hidden text-gray-500 focus:outline-none" id="open-mobile-sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="ml-4 text-xl font-semibold text-gray-800" id="page-title">Dashboard</h1>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <button class="p-1 text-gray-400 hover:text-gray-500 focus:outline-none">
+                            <i class="fas fa-bell"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                        </button>
+                    </div>
+                    <div class="ml-4 dropdown relative">
+                        <button class="flex items-center text-sm focus:outline-none">
+                            <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/11.jpg" alt="Admin">
+                            <span class="ml-2 text-gray-700 hidden md:inline">Admin</span>
+                            <i class="fas fa-chevron-down ml-1 text-gray-500 text-xs"></i>
+                        </button>
+                        <div class="dropdown-content absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="flex-1 overflow-auto p-4">
+                <!-- Dashboard Content (Default) -->
+                <div id="dashboard-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <!-- Stats Cards -->
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                                    <i class="fas fa-user-graduate text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm font-medium">Students</h3>
+                                    <p class="text-2xl font-semibold text-gray-800">1,245</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                                    <i class="fas fa-chalkboard-teacher text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm font-medium">Teachers</h3>
+                                    <p class="text-2xl font-semibold text-gray-800">84</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                                    <i class="fas fa-book text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm font-medium">Library Books</h3>
+                                    <p class="text-2xl font-semibold text-gray-800">5,327</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                    <i class="fas fa-utensils text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm font-medium">Meals Today</h3>
+                                    <p class="text-2xl font-semibold text-gray-800">876</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <!-- Recent Activity -->
+                        <div class="bg-white p-6 rounded-lg shadow lg:col-span-2">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h2>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-900">New student registered</p>
+                                        <p class="text-sm text-gray-500">Sarah Johnson joined Grade 10</p>
+                                        <p class="text-xs text-gray-400">2 hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                        <i class="fas fa-book"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-900">Library book checked out</p>
+                                        <p class="text-sm text-gray-500">"Advanced Mathematics" by John Smith</p>
+                                        <p class="text-xs text-gray-400">5 hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-900">New menu item added</p>
+                                        <p class="text-sm text-gray-500">Vegetable Pasta added to lunch menu</p>
+                                        <p class="text-xs text-gray-400">1 day ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h2>
+                            <div class="grid grid-cols-2 gap-4">
+                                <a href="#" data-section="students" class="quick-action-btn flex flex-col items-center justify-center p-4 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors">
+                                    <i class="fas fa-user-plus text-2xl mb-2"></i>
+                                    <span class="text-sm font-medium">Add Student</span>
+                                </a>
+                                <a href="#" data-section="teachers" class="quick-action-btn flex flex-col items-center justify-center p-4 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition-colors">
+                                    <i class="fas fa-chalkboard-teacher text-2xl mb-2"></i>
+                                    <span class="text-sm font-medium">Add Teacher</span>
+                                </a>
+                                <a href="#" data-section="library" class="quick-action-btn flex flex-col items-center justify-center p-4 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors">
+                                    <i class="fas fa-book text-2xl mb-2"></i>
+                                    <span class="text-sm font-medium">Add Book</span>
+                                </a>
+                                <a href="#" data-section="restaurant" class="quick-action-btn flex flex-col items-center justify-center p-4 rounded-lg bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition-colors">
+                                    <i class="fas fa-utensils text-2xl mb-2"></i>
+                                    <span class="text-sm font-medium">Add Meal</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teachers Content -->
+                <div id="teachers-content" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-800">Teachers Management</h2>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center add-btn" data-type="teacher">
+                            <i class="fas fa-plus mr-2"></i> Add Teacher
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                            <div class="relative w-64">
+                                <input type="text" placeholder="Search teachers..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 border rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                                <button class="px-3 py-1 border rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 data-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade Level</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="teachers-table-body">
+                                    <!-- Teachers data will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</a>
+                                <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</a>
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">
+                                        Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">84</span> results
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">Previous</span>
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                        <a href="#" aria-current="page" class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">3</a>
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">Next</span>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Students Content -->
+                <div id="students-content" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-800">Students Management</h2>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center add-btn" data-type="student">
+                            <i class="fas fa-plus mr-2"></i> Add Student
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                            <div class="relative w-64">
+                                <input type="text" placeholder="Search students..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 border rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                                <button class="px-3 py-1 border rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 data-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="students-table-body">
+                                    <!-- Students data will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
+                            <!-- Pagination would go here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supervisors Content -->
+                <div id="supervisors-content" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-800">Supervisors Management</h2>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center add-btn" data-type="supervisor">
+                            <i class="fas fa-plus mr-2"></i> Add Supervisor
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b border-gray-200">
+                            <div class="relative w-64">
+                                <input type="text" placeholder="Search supervisors..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 data-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="supervisors-table-body">
+                                    <!-- Supervisors data will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Library Content -->
+                <div id="library-content" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-800">Library Management</h2>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center add-btn" data-type="book">
+                            <i class="fas fa-plus mr-2"></i> Add Book
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b border-gray-200">
+                            <div class="relative w-64">
+                                <input type="text" placeholder="Search books..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 data-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ISBN</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="library-table-body">
+                                    <!-- Library data will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Content -->
+                <div id="restaurant-content" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-800">Restaurant Management</h2>
+                        <div class="flex space-x-2">
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center add-btn" data-type="meal">
+                                <i class="fas fa-plus mr-2"></i> Add Meal
+                            </button>
+                            <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center add-btn" data-type="menu">
+                                <i class="fas fa-calendar-alt mr-2"></i> Weekly Menu
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b border-gray-200">
+                            <div class="relative w-64">
+                                <input type="text" placeholder="Search meals..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 data-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Meal Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nutrition</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="restaurant-table-body">
+                                    <!-- Restaurant data will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory Content -->
+                <div id="inventory-content" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold text-gray-800">Inventory Management</h2>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center add-btn" data-type="inventory">
+                            <i class="fas fa-plus mr-2"></i> Add Item
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b border-gray-200">
+                            <div class="relative w-64">
+                                <input type="text" placeholder="Search inventory..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 data-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="inventory-table-body">
+                                    <!-- Inventory data will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Content -->
+                <div id="settings-content" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">System Settings</h2>
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">General Settings</h3>
+                        </div>
+                        <div class="p-4">
+                            <form class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="school-name" class="block text-sm font-medium text-gray-700">School Name</label>
+                                        <input type="text" id="school-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" value="EduManage High School">
+                                    </div>
+                                    <div>
+                                        <label for="school-year" class="block text-sm font-medium text-gray-700">Current School Year</label>
+                                        <input type="text" id="school-year" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" value="2023-2024">
+                                    </div>
+                                    <div>
+                                        <label for="timezone" class="block text-sm font-medium text-gray-700">Timezone</label>
+                                        <select id="timezone" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                            <option>UTC-05:00 Eastern Time</option>
+                                            <option>UTC-06:00 Central Time</option>
+                                            <option>UTC-07:00 Mountain Time</option>
+                                            <option selected>UTC-08:00 Pacific Time</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="date-format" class="block text-sm font-medium text-gray-700">Date Format</label>
+                                        <select id="date-format" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                            <option>MM/DD/YYYY</option>
+                                            <option selected>DD/MM/YYYY</option>
+                                            <option>YYYY-MM-DD</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="pt-4 border-t border-gray-200">
+                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Content -->
+                <div id="reports-content" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Reports</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                                    <i class="fas fa-user-graduate text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">Student Reports</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Generate reports on student performance, attendance, and more.</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <a href="#" class="text-blue-600 text-sm font-medium hover:text-blue-800">View Reports →</a>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                                    <i class="fas fa-chalkboard-teacher text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">Teacher Reports</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Track teacher performance, class schedules, and workload.</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <a href="#" class="text-blue-600 text-sm font-medium hover:text-blue-800">View Reports →</a>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                                    <i class="fas fa-book text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">Library Reports</h3>
+                                    <p class="text-sm text-gray-500 mt-1">View book circulation, overdue items, and inventory.</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <a href="#" class="text-blue-600 text-sm font-medium hover:text-blue-800">View Reports →</a>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                    <i class="fas fa-utensils text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">Restaurant Reports</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Track meal consumption, inventory, and financials.</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <a href="#" class="text-blue-600 text-sm font-medium hover:text-blue-800">View Reports →</a>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-red-100 text-red-600">
+                                    <i class="fas fa-boxes text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">Inventory Reports</h3>
+                                    <p class="text-sm text-gray-500 mt-1">View stock levels, usage trends, and reorder needs.</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <a href="#" class="text-blue-600 text-sm font-medium hover:text-blue-800">View Reports →</a>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
+                                    <i class="fas fa-chart-line text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">Custom Reports</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Create custom reports with our report builder tool.</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <a href="#" class="text-blue-600 text-sm font-medium hover:text-blue-800">Create Report →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal fixed inset-0 z-50 overflow-y-auto" id="form-modal">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-user-plus text-blue-600" id="modal-icon"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Add New Teacher
+                            </h3>
+                            <div class="mt-2">
+                                <form id="data-form">
+                                    <div class="grid grid-cols-1 gap-y-4 gap-x-6 sm:grid-cols-6">
+                                        <!-- Form fields will be inserted here by JavaScript -->
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" id="save-btn">
+                        Save
+                    </button>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" id="cancel-btn">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fixed inset-0 z-50 overflow-y-auto" id="confirm-modal">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="confirm-title">
+                                Confirm Deletion
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500" id="confirm-message">
+                                    Are you sure you want to delete this item? This action cannot be undone.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm" id="confirm-delete-btn">
+                        Delete
+                    </button>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" id="cancel-delete-btn">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for demonstration
+        const sampleData = {
+            teachers: [
+                { id: 1, name: 'John Smith', email: 'john.smith@school.edu', subject: 'Mathematics', gradeLevel: '10-12', status: 'Active' },
+                { id: 2, name: 'Sarah Johnson', email: 'sarah.j@school.edu', subject: 'English', gradeLevel: '9-10', status: 'Active' },
+                { id: 3, name: 'Michael Brown', email: 'michael.b@school.edu', subject: 'Science', gradeLevel: '11-12', status: 'On Leave' },
+                { id: 4, name: 'Emily Davis', email: 'emily.d@school.edu', subject: 'History', gradeLevel: '9-12', status: 'Active' },
+                { id: 5, name: 'Robert Wilson', email: 'robert.w@school.edu', subject: 'Physical Education', gradeLevel: 'All', status: 'Active' }
+            ],
+            students: [
+                { id: 101, name: 'David Miller', grade: '10', parent: 'Lisa Miller', contact: '555-0101', status: 'Active' },
+                { id: 102, name: 'Jennifer Lee', grade: '11', parent: 'Thomas Lee', contact: '555-0102', status: 'Active' },
+                { id: 103, name: 'Kevin Garcia', grade: '9', parent: 'Maria Garcia', contact: '555-0103', status: 'Active' },
+                { id: 104, name: 'Amanda Wilson', grade: '12', parent: 'James Wilson', contact: '555-0104', status: 'Graduated' },
+                { id: 105, name: 'Daniel Kim', grade: '10', parent: 'Sophia Kim', contact: '555-0105', status: 'Active' }
+            ],
+            supervisors: [
+                { id: 201, name: 'Thomas Anderson', department: 'Administration', contact: '555-0201', status: 'Active' },
+                { id: 202, name: 'Patricia White', department: 'Facilities', contact: '555-0202', status: 'Active' },
+                { id: 203, name: 'Richard Clark', department: 'Security', contact: '555-0203', status: 'Active' }
+            ],
+            library: [
+                { id: 301, title: 'Advanced Mathematics', author: 'John Smith', isbn: '978-1234567890', category: 'Textbook', status: 'Available' },
+                { id: 302, title: 'English Literature', author: 'Sarah Johnson', isbn: '978-0987654321', category: 'Textbook', status: 'Checked Out' },
+                { id: 303, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', isbn: '978-0743273565', category: 'Fiction', status: 'Available' },
+                { id: 304, title: 'To Kill a Mockingbird', author: 'Harper Lee', isbn: '978-0446310789', category: 'Fiction', status: 'Available' },
+                { id: 305, title: 'Biology Fundamentals', author: 'Michael Brown', isbn: '978-1122334455', category: 'Textbook', status: 'Available' }
+            ],
+            restaurant: [
+                { id: 401, name: 'Vegetable Pasta', category: 'Lunch', price: '$4.50', nutrition: 'Vegetarian', status: 'Available' },
+                { id: 402, name: 'Chicken Sandwich', category: 'Lunch', price: '$5.00', nutrition: 'High Protein', status: 'Available' },
+                { id: 403, name: 'Caesar Salad', category: 'Lunch', price: '$4.00', nutrition: 'Low Calorie', status: 'Available' },
+                { id: 404, name: 'Pancakes', category: 'Breakfast', price: '$3.50', nutrition: 'High Carb', status: 'Available' },
+                { id: 405, name: 'Fruit Yogurt', category: 'Snack', price: '$2.50', nutrition: 'Low Fat', status: 'Available' }
+            ],
+            inventory: [
+                { id: 501, name: 'Whiteboard Markers', category: 'Classroom Supplies', quantity: '45', location: 'Storage Room A', status: 'In Stock' },
+                { id: 502, name: 'Printer Paper', category: 'Office Supplies', quantity: '12', location: 'Storage Room B', status: 'Low Stock' },
+                { id: 503, name: 'Science Lab Beakers', category: 'Lab Equipment', quantity: '30', location: 'Science Lab', status: 'In Stock' },
+                { id: 504, name: 'Basketballs', category: 'Sports Equipment', quantity: '15', location: 'Gym Storage', status: 'In Stock' },
+                { id: 505, name: 'First Aid Kits', category: 'Health Supplies', quantity: '8', location: 'Nurse Office', status: 'Reorder Needed' }
+            ]
+        };
+
+        // Form configurations for each type
+        const formConfigs = {
+            teacher: {
+                title: 'Teacher',
+                icon: 'chalkboard-teacher',
+                fields: [
+                    { name: 'name', label: 'Full Name', type: 'text', required: true },
+                    { name: 'email', label: 'Email', type: 'email', required: true },
+                    { name: 'subject', label: 'Subject', type: 'text', required: true },
+                    { name: 'gradeLevel', label: 'Grade Level', type: 'select', options: ['K-5', '6-8', '9-10', '11-12', 'All'], required: true },
+                    { name: 'status', label: 'Status', type: 'select', options: ['Active', 'On Leave', 'Inactive'], required: true }
+                ]
+            },
+            student: {
+                title: 'Student',
+                icon: 'user-graduate',
+                fields: [
+                    { name: 'name', label: 'Full Name', type: 'text', required: true },
+                    { name: 'grade', label: 'Grade', type: 'select', options: ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], required: true },
+                    { name: 'parent', label: 'Parent/Guardian', type: 'text', required: true },
+                    { name: 'contact', label: 'Contact Number', type: 'tel', required: true },
+                    { name: 'status', label: 'Status', type: 'select', options: ['Active', 'Transferred', 'Graduated', 'Inactive'], required: true }
+                ]
+            },
+            supervisor: {
+                title: 'Supervisor',
+                icon: 'user-shield',
+                fields: [
+                    { name: 'name', label: 'Full Name', type: 'text', required: true },
+                    { name: 'department', label: 'Department', type: 'select', options: ['Administration', 'Facilities', 'Security', 'Transportation', 'Other'], required: true },
+                    { name: 'contact', label: 'Contact Number', type: 'tel', required: true },
+                    { name: 'status', label: 'Status', type: 'select', options: ['Active', 'Inactive'], required: true }
+                ]
+            },
+            book: {
+                title: 'Book',
+                icon: 'book',
+                fields: [
+                    { name: 'title', label: 'Title', type: 'text', required: true },
+                    { name: 'author', label: 'Author', type: 'text', required: true },
+                    { name: 'isbn', label: 'ISBN', type: 'text', required: true },
+                    { name: 'category', label: 'Category', type: 'select', options: ['Textbook', 'Fiction', 'Non-Fiction', 'Reference', 'Other'], required: true },
+                    { name: 'status', label: 'Status', type: 'select', options: ['Available', 'Checked Out', 'Lost', 'Repair Needed'], required: true }
+                ]
+            },
+            meal: {
+                title: 'Meal',
+                icon: 'utensils',
+                fields: [
+                    { name: 'name', label: 'Meal Name', type: 'text', required: true },
+                    { name: 'category', label: 'Category', type: 'select', options: ['Breakfast', 'Lunch', 'Snack', 'Dinner'], required: true },
+                    { name: 'price', label: 'Price', type: 'text', required: true },
+                    { name: 'nutrition', label: 'Nutrition Info', type: 'text', required: true },
+                    { name: 'status', label: 'Status', type: 'select', options: ['Available', 'Unavailable', 'Seasonal'], required: true }
+                ]
+            },
+            inventory: {
+                title: 'Inventory Item',
+                icon: 'boxes',
+                fields: [
+                    { name: 'name', label: 'Item Name', type: 'text', required: true },
+                    { name: 'category', label: 'Category', type: 'select', options: ['Classroom Supplies', 'Office Supplies', 'Lab Equipment', 'Sports Equipment', 'Health Supplies', 'Other'], required: true },
+                    { name: 'quantity', label: 'Quantity', type: 'number', required: true },
+                    { name: 'location', label: 'Location', type: 'text', required: true },
+                    { name: 'status', label: 'Status', type: 'select', options: ['In Stock', 'Low Stock', 'Reorder Needed', 'Out of Stock'], required: true }
+                ]
+            }
+        };
+
+        // DOM elements
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        const quickActionBtns = document.querySelectorAll('.quick-action-btn');
+        const addBtns = document.querySelectorAll('.add-btn');
+        const contentSections = document.querySelectorAll('[id$="-content"]');
+        const pageTitle = document.getElementById('page-title');
+        const formModal = document.getElementById('form-modal');
+        const confirmModal = document.getElementById('confirm-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalIcon = document.getElementById('modal-icon');
+        const dataForm = document.getElementById('data-form');
+        const saveBtn = document.getElementById('save-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+        const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+        const openMobileSidebar = document.getElementById('open-mobile-sidebar');
+        const closeMobileSidebar = document.getElementById('close-mobile-sidebar');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const mobileSidebarBackdrop = document.getElementById('mobile-sidebar-backdrop');
+
+        // State variables
+        let currentSection = 'dashboard';
+        let currentAction = 'add';
+        let currentType = '';
+        let currentItemId = null;
+
+        // Initialize the page
+        function init() {
+            loadData();
+            setupEventListeners();
+        }
+
+        // Load sample data into tables
+        function loadData() {
+            for (const type in sampleData) {
+                const tableBody = document.getElementById(`${type}-table-body`);
+                if (tableBody) {
+                    tableBody.innerHTML = '';
+                    sampleData[type].forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.id}</td>
+                            ${Object.keys(item).filter(key => key !== 'id').map(key => `
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item[key]}</td>
+                            `).join('')}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <button class="text-blue-600 hover:text-blue-900 mr-3 edit-btn" data-type="${type}" data-id="${item.id}">Edit</button>
+                                <button class="text-red-600 hover:text-red-900 delete-btn" data-type="${type}" data-id="${item.id}">Delete</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Sidebar navigation
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = link.getAttribute('data-section') || 'dashboard';
+                    showSection(section);
+                    
+                    // Update active state
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    if (section !== 'dashboard') {
+                        link.classList.add('active');
+                    } else {
+                        document.querySelector('.sidebar-link[href="#"]').classList.add('active');
+                    }
+                    
+                    // Close mobile sidebar if open
+                    mobileSidebar.classList.remove('flex');
+                    mobileSidebar.classList.add('hidden');
+                    mobileSidebarBackdrop.classList.add('hidden');
+                });
+            });
+
+            // Quick action buttons
+            quickActionBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = btn.getAttribute('data-section');
+                    showSection(section);
+                    showFormModal('add', section.slice(0, -1)); // Remove 's' from end (teachers -> teacher)
+                });
+            });
+
+            // Add buttons
+            addBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const type = btn.getAttribute('data-type');
+                    showFormModal('add', type);
+                });
+            });
+
+            // Edit and Delete buttons (delegated)
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('edit-btn')) {
+                    const type = e.target.getAttribute('data-type');
+                    const id = parseInt(e.target.getAttribute('data-id'));
+                    showFormModal('edit', type, id);
+                }
+                
+                if (e.target.classList.contains('delete-btn')) {
+                    const type = e.target.getAttribute('data-type');
+                    const id = parseInt(e.target.getAttribute('data-id'));
+                    showConfirmModal(type, id);
+                }
+            });
+
+            // Modal buttons
+            saveBtn.addEventListener('click', saveData);
+            cancelBtn.addEventListener('click', () => formModal.classList.remove('active'));
+            confirmDeleteBtn.addEventListener('click', deleteItem);
+            cancelDeleteBtn.addEventListener('click', () => confirmModal.classList.remove('active'));
+
+            // Mobile sidebar
+            openMobileSidebar.addEventListener('click', () => {
+                mobileSidebar.classList.remove('hidden');
+                mobileSidebar.classList.add('flex');
+                mobileSidebarBackdrop.classList.remove('hidden');
+            });
+
+            closeMobileSidebar.addEventListener('click', () => {
+                mobileSidebar.classList.remove('flex');
+                mobileSidebar.classList.add('hidden');
+                mobileSidebarBackdrop.classList.add('hidden');
+            });
+
+            mobileSidebarBackdrop.addEventListener('click', () => {
+                mobileSidebar.classList.remove('flex');
+                mobileSidebar.classList.add('hidden');
+                mobileSidebarBackdrop.classList.add('hidden');
+            });
+        }
+
+        // Show a specific content section
+        function showSection(section) {
+            contentSections.forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`${section}-content`).classList.remove('hidden');
+            currentSection = section;
+            
+            // Update page title
+            const titleMap = {
+                'dashboard': 'Dashboard',
+                'teachers': 'Teachers Management',
+                'students': 'Students Management',
+                'supervisors': 'Supervisors Management',
+                'library': 'Library Management',
+                'restaurant': 'Restaurant Management',
+                'inventory': 'Inventory Management',
+                'settings': 'System Settings',
+                'reports': 'Reports'
+            };
+            pageTitle.textContent = titleMap[section] || 'Dashboard';
+        }
+
+        // Show the form modal for adding/editing
+        function showFormModal(action, type, id = null) {
+            currentAction = action;
+            currentType = type;
+            currentItemId = id;
+            
+            const config = formConfigs[type];
+            if (!config) return;
+            
+            // Set modal title and icon
+            modalTitle.textContent = `${action === 'add' ? 'Add New' : 'Edit'} ${config.title}`;
+            modalIcon.className = `fas fa-${config.icon} text-blue-600`;
+            
+            // Build form fields
+            const formFields = document.querySelector('#data-form .grid');
+            formFields.innerHTML = '';
+            
+            config.fields.forEach(field => {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.className = 'sm:col-span-6';
+                
+                const label = document.createElement('label');
+                label.className = 'block text-sm font-medium text-gray-700';
+                label.htmlFor = field.name;
+                label.textContent = field.label;
+                
+                let input;
+                if (field.type === 'select') {
+                    input = document.createElement('select');
+                    input.className = 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500';
+                    field.options.forEach(option => {
+                        const opt = document.createElement('option');
+                        opt.value = option;
+                        opt.textContent = option;
+                        input.appendChild(opt);
+                    });
+                } else {
+                    input = document.createElement('input');
+                    input.type = field.type;
+                    input.className = 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500';
+                }
+                
+                input.id = field.name;
+                input.name = field.name;
+                input.required = field.required;
+                
+                // If editing, populate with existing data
+                if (action === 'edit' && id) {
+                    const item = sampleData[`${type}s`].find(item => item.id === id);
+                    if (item) {
+                        if (field.type === 'select') {
+                            input.value = item[field.name];
+                        } else {
+                            input.value = item[field.name];
+                        }
+                    }
+                }
+                
+                fieldDiv.appendChild(label);
+                fieldDiv.appendChild(input);
+                formFields.appendChild(fieldDiv);
+            });
+            
+            formModal.classList.add('active');
+        }
+
+        // Show the confirmation modal for deletion
+        function showConfirmModal(type, id) {
+            currentType = type;
+            currentItemId = id;
+            
+            const item = sampleData[`${type}s`].find(item => item.id === id);
+            if (item) {
+                document.getElementById('confirm-message').textContent = 
+                    `Are you sure you want to delete ${item.name || item.title}? This action cannot be undone.`;
+            }
+            
+            confirmModal.classList.add('active');
+        }
+
+        // Save data from the form
+        function saveData() {
+            const formData = new FormData(dataForm);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            if (currentAction === 'add') {
+                // Generate a new ID (in a real app, this would come from the server)
+                const newId = Math.max(...sampleData[`${currentType}s`].map(item => item.id)) + 1;
+                data.id = newId;
+                sampleData[`${currentType}s`].push(data);
+            } else if (currentAction === 'edit' && currentItemId) {
+                const index = sampleData[`${currentType}s`].findIndex(item => item.id === currentItemId);
+                if (index !== -1) {
+                    data.id = currentItemId;
+                    sampleData[`${currentType}s`][index] = data;
+                }
+            }
+            
+            // Reload the data and close the modal
+            loadData();
+            formModal.classList.remove('active');
+        }
+
+        // Delete an item
+        function deleteItem() {
+            if (currentItemId) {
+               
+</body>
+</html>
